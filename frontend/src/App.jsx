@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import AuthGateway from './AuthGateway';
-import Navbar from './components/common/Navbar';
+import NavBar from './components/common/NavBar';
 import DashboardKpis from './components/dashboard/DashboardKpis';
 import DailySpendAreaChart from './components/dashboard/DailySpendAreaChart';
 import MonthlyTrendChart from './components/dashboard/MonthlyTrendChart';
