@@ -20,10 +20,17 @@ public class PaymentSubtype {
     @JsonIgnore
     private PaymentMethod paymentMethod;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     public PaymentSubtype() {}
-    public PaymentSubtype(String paymentSubtypeName, PaymentMethod paymentMethod) {
+
+    public PaymentSubtype(String paymentSubtypeName, PaymentMethod paymentMethod, User user) {
         this.paymentSubtypeName = paymentSubtypeName;
         this.paymentMethod = paymentMethod;
+        this.user = user;
     }
 
     public Long getPaymentSubtypeId() { return paymentSubtypeId; }
@@ -34,4 +41,7 @@ public class PaymentSubtype {
 
     public PaymentMethod getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

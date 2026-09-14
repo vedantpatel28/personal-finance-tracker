@@ -1,4 +1,7 @@
-* {
+/* =================================================================
+   GLOBAL RESET & FULL VIEWPORT CONSTRAINTS
+================================================================= */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -9,25 +12,206 @@ html, body, #root {
   min-height: 100vh;
   background-color: #0b1120;
   color: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Scrollbar for Ledger Table */
+/* =================================================================
+   CUSTOM SCROLLBAR
+================================================================= */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: #0f172a;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* =================================================================
+   NAVBAR & HEADER (LOCKED RESPONSIVENESS)
+================================================================= */
+.nav-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap; /* BANS wrapping on laptops */
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 32px;
+  background-color: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  gap: 20px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0; /* BANS logo shrinkage */
+}
+
+.nav-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-btn {
+  white-space: nowrap; /* BANS text dropping to next line */
+  flex-shrink: 0;      /* BANS button shrinkage */
+}
+
+.period-select {
+  display: flex;
+  align-items: center;
+  background-color: #1e293b;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  white-space: nowrap;
+}
+
+/* =================================================================
+   LAYOUT SYSTEM (DESKTOP FIRST)
+================================================================= */
+.dashboard-main {
+  width: 100%;
+  max-width: 100vw;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1.1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  gap: 20px;
+  width: 100%;
+  align-items: start;
+}
+
+.dashboard-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 20px;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.chart-wrapper-main {
+  width: 100%;
+  height: 270px;
+  min-height: 270px;
+  display: block;
+  position: relative;
+}
+
+.chart-wrapper-donut {
+  width: 100%;
+  height: 190px;
+  min-height: 190px;
+  display: block;
+  position: relative;
+}
+
+/* =================================================================
+   TABLETS & MEDIUM LAPTOPS (max-width: 1100px)
+================================================================= */
+@media (max-width: 1100px) {
+  .nav-container {
+    padding: 14px 20px;
+  }
+  .dashboard-main {
+    padding: 24px 20px;
+  }
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  .lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =================================================================
+   MOBILE SCREENS (max-width: 768px)
+================================================================= */
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  /* Nav stacks structurally on Mobile */
+  .nav-container {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .nav-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto auto; /* Creates exact space for Period | Add | Logout */
+    gap: 8px;
+  }
+
+  .period-select {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Ledger mobile fixes */
+  .ledger-toolbar {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+  .ledger-search {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+  .transaction-item .tx-amount {
+    align-self: flex-end;
+  }
 }
