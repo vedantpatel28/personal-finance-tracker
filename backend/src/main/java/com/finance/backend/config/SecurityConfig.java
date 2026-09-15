@@ -2,7 +2,6 @@ package com.finance.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,37 +18,34 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Inject your existing JWT filter and AuthenticationProvider
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
+    // We inject ONLY the JwtAuthenticationFilter, ensuring Spring doesn't look for beans that don't exist
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
-        this.authenticationProvider = authenticationProvider;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Hook in the custom CORS configuration source below
+                // 1. Hook in the Vercel CORS configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // 2. Disable CSRF since we are using stateless JWTs
+                // 2. Disable CSRF (Standard for stateless JWT APIs)
                 .csrf(csrf -> csrf.disable())
 
-                // 3. Configure endpoint access rules
+                // 3. Open the auth/register endpoints to the public, protect everything else
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/users/register").permitAll() // Allow public access to login/register
-                        .anyRequest().authenticated() // Protect everything else
+                        .requestMatchers("/api/auth/**", "/api/users/register").permitAll()
+                        .anyRequest().authenticated()
                 )
 
-                // 4. Set session management to stateless
+                // 4. Make the session stateless
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 5. Register your authentication provider and JWT filter
-                .authenticationProvider(authenticationProvider)
+                // 5. Add the JWT filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -59,9 +55,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Your exact Vercel frontend URL
+        // Explicitly allow your Vercel frontend
         configuration.setAllowedOrigins(List.of("https://financeos-plum.vercel.app"));
-
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
