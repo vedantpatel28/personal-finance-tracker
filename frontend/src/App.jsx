@@ -132,7 +132,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar
+      <NavBar
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         selectedYear={selectedYear}
